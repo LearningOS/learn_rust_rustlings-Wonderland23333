@@ -1,53 +1,47 @@
-// errors5.rs
+// errors2.rs
+// Say we're writing a game where you can buy items with tokens. All items cost
+// 5 tokens, and whenever you purchase items there is a processing fee of 1
+// token. A player of the game will type in how many items they want to buy,
+// and the `total_cost` function will calculate the total number of tokens.
+// Since the player typed in the quantity, though, we get it as a string-- and
+// they might have typed anything, not just numbers!
 
-// This program uses a completed version of the code from errors4.
-// It won't compile right now! Why?
-// Execute `rustlings hint errors5` for hints!
+// Right now, this function isn't handling the error case at all (and isn't
+// handling the success case properly either). What we want to do is:
+// if we call the `parse` function on a string that is not a number, that
+// function will return a `ParseIntError`, and in that case, we want to
+// immediately return that error from our function and not try to multiply
+// and add.
 
-// I AM NOT DONE
+// There are at least two ways to implement this that are both correct-- but
+// one is a lot shorter! Execute `rustlings hint errors2` for hints to both ways.
 
-use std::error;
-use std::fmt;
+
+
 use std::num::ParseIntError;
 
-// TODO: update the return type of `main()` to make this compile.
-fn main() -> Result<(), ParseIntError> {
-    let pretend_user_input = "42";
-    let x: i64 = pretend_user_input.parse()?;
-    println!("output={:?}", PositiveNonzeroInteger::new(x)?);
-    Ok(())
+pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
+    let processing_fee = 1;
+    let cost_per_item = 5;
+    let qty = item_quantity.parse::<i32>()?;
+
+    Ok(qty * cost_per_item + processing_fee)
 }
 
-// Don't change anything below this line.
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[derive(PartialEq, Debug)]
-struct PositiveNonzeroInteger(u64);
+    #[test]
+    fn item_quantity_is_a_valid_number() {
+        assert_eq!(total_cost("34"), Ok(171));
+    }
 
-#[derive(PartialEq, Debug)]
-enum CreationError {
-    Negative,
-    Zero,
-}
-
-impl PositiveNonzeroInteger {
-    fn new(value: i64) -> Result<PositiveNonzeroInteger, CreationError> {
-        match value {
-            x if x < 0 => Err(CreationError::Negative),
-            x if x == 0 => Err(CreationError::Zero),
-            x => Ok(PositiveNonzeroInteger(x as u64))
-        }
+    #[test]
+    fn item_quantity_is_an_invalid_number() {
+        assert_eq!(
+            total_cost("beep boop").unwrap_err().to_string(),
+            "invalid digit found in string"
+        );
     }
 }
-
-// This is required so that `CreationError` can implement `error::Error`.
-impl fmt::Display for CreationError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let description = match *self {
-            CreationError::Negative => "number is negative",
-            CreationError::Zero => "number is zero",
-        };
-        f.write_str(description)
-    }
-}
-
-impl error::Error for CreationError {}
