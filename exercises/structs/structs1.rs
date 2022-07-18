@@ -1,58 +1,49 @@
-// structs2.rs
+// structs1.rs
 // Address all the TODOs to make the tests pass!
 
 
 
+struct ColorClassicStruct {
+    // TODO: Something goes here
+    name: &'static str,
+    hex: &'static str,
+}
+fn new(name:  &'static str,hex: &'static str)-> ColorClassicStruct{
+    ColorClassicStruct{name, hex}
+}
+struct ColorTupleStruct<'a>(&'a str , &'a str/* TODO: Something goes here */);
+
 #[derive(Debug)]
-struct Order {
-    name: String,
-    year: u32,
-    made_by_phone: bool,
-    made_by_mobile: bool,
-    made_by_email: bool,
-    item_number: u32,
-    count: u32,
-}
-
-fn create_order_template() -> Order {
-    Order {
-        name: String::from("Bob"),
-        year: 2019,
-        made_by_phone: false,
-        made_by_mobile: false,
-        made_by_email: true,
-        item_number: 123,
-        count: 0,
-    }
-}
-
-fn create_your_order() -> Order {
-    Order {
-        name: String::from("Hacker in Rust"),
-        year: 2019,
-        made_by_phone: false,
-        made_by_mobile: false,
-        made_by_email: true,
-        item_number: 123,
-        count: 1,
-    }
-}
+struct UnitStruct;
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn your_order() {
-        let order_template = create_order_template();
-        // TODO: Create your own order using the update syntax and template above!
-        let your_order = create_your_order();
-        assert_eq!(your_order.name, "Hacker in Rust");
-        assert_eq!(your_order.year, order_template.year);
-        assert_eq!(your_order.made_by_phone, order_template.made_by_phone);
-        assert_eq!(your_order.made_by_mobile, order_template.made_by_mobile);
-        assert_eq!(your_order.made_by_email, order_template.made_by_email);
-        assert_eq!(your_order.item_number, order_template.item_number);
-        assert_eq!(your_order.count, 1);
+    fn classic_c_structs() {
+        // TODO: Instantiate a classic c struct!
+        let green = new("green","#00FF00");
+
+        assert_eq!(green.name, "green");
+        assert_eq!(green.hex, "#00FF00");
+    }
+
+    #[test]
+    fn tuple_structs() {
+        // TODO: Instantiate a tuple struct!
+        let green = ColorTupleStruct("green","#00FF00");
+
+        assert_eq!(green.0, "green");
+        assert_eq!(green.1, "#00FF00");
+    }
+
+    #[test]
+    fn unit_structs() {
+        // TODO: Instantiate a unit struct!
+        let unit_struct = UnitStruct;
+        let message = format!("{:?}s are fun!", unit_struct);
+
+        assert_eq!(message, "UnitStructs are fun!");
     }
 }
